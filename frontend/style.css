@@ -1,0 +1,357 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #03020d;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+
+    font-family: 'Cinzel', serif;
+    color: rgba(240, 235, 255, 0.85);
+}
+
+canvas {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#entry-screen,
+#view-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 48px;
+
+    pointer-events: none;
+    transition: opacity 0.9s ease, filter 0.9s ease;
+}
+
+.hidden {
+    opacity: 0 !important;
+    filter: blur(10px) !important;
+    pointer-events: none !important;
+}
+
+#main-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    animation: fadeUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.title-word {
+    font-size: clamp(0.65rem, 1.5vw, 0.9rem);
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: rgba(220, 210, 255, 0.45);
+    font-weight: 400;
+}
+
+.title-word.accent {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2.2rem, 6vw, 5rem);
+    font-weight: 400;
+    letter-spacing: 0.18em;
+
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(200, 185, 255, 0.75);
+
+    text-shadow:
+        0 0 60px rgba(160, 130, 255, 0.25),
+        0 0 120px rgba(100, 80, 200, 0.12);
+}
+
+#input-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: min(420px, 80vw);
+    animation: fadeUp 1.4s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+    pointer-events: auto;
+}
+
+#star-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(200, 185, 255, 0.3);
+    border-radius: 0;
+    outline: none;
+
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
+    letter-spacing: 0.25em;
+    color: rgba(240, 235, 255, 0.9);
+    text-align: center;
+    padding: 10px 0;
+
+    transition: border-color 0.4s ease;
+    caret-color: rgba(200, 185, 255, 0.8);
+}
+
+#star-input::placeholder {
+    color: rgba(200, 185, 255, 0.2);
+    letter-spacing: 0.3em;
+    font-style: italic;
+}
+
+#star-input:focus {
+    border-bottom-color: rgba(200, 185, 255, 0.7);
+}
+
+#enter-hint {
+    font-size: 1.2rem;
+    color: rgba(200, 185, 255, 0.4);
+    transition: opacity 0.4s ease, color 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+
+    opacity: 0;
+}
+
+#enter-hint.visible {
+    opacity: 1;
+}
+
+#enter-hint:hover {
+    color: rgba(200, 185, 255, 0.9);
+}
+
+#view-screen {
+    gap: 0;
+    justify-content: center;
+}
+
+#view-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(0.55rem, 1.4vw, 0.9rem);
+    letter-spacing: 0.4em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(200, 185, 255, 0.4);
+    text-shadow: 0 0 30px rgba(160, 130, 255, 0.15);
+    text-transform: uppercase;
+    position: fixed;
+    top: 3vh;
+    left: 0;
+    right: 0;
+    text-align: center;
+    white-space: nowrap;
+    animation: fadeUp 1s ease both;
+}
+
+#reset-btn {
+    position: fixed;
+    bottom: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: rgba(200, 185, 255, 0.3);
+    transition: color 0.4s ease;
+}
+
+#reset-btn:hover {
+    color: rgba(200, 185, 255, 0.8);
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+        filter: blur(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+*,
+*::before,
+*::after {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 48px;
+
+    pointer-events: none;
+    transition: opacity 0.9s ease, filter 0.9s ease;
+}
+
+.hidden {
+    opacity: 0 !important;
+    filter: blur(10px) !important;
+    pointer-events: none !important;
+}
+
+#main-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    animation: fadeUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.title-word {
+    font-size: clamp(0.65rem, 1.5vw, 0.9rem);
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: rgba(220, 210, 255, 0.45);
+    font-weight: 400;
+}
+
+.title-word.accent {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2.2rem, 6vw, 5rem);
+    font-weight: 400;
+    letter-spacing: 0.18em;
+
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(200, 185, 255, 0.75);
+
+    text-shadow:
+        0 0 60px rgba(160, 130, 255, 0.25),
+        0 0 120px rgba(100, 80, 200, 0.12);
+}
+
+#input-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: min(420px, 80vw);
+    animation: fadeUp 1.4s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+    pointer-events: auto;
+}
+
+#star-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(200, 185, 255, 0.3);
+    border-radius: 0;
+    outline: none;
+
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
+    letter-spacing: 0.25em;
+    color: rgba(240, 235, 255, 0.9);
+    text-align: center;
+    padding: 10px 0;
+
+    transition: border-color 0.4s ease;
+    caret-color: rgba(200, 185, 255, 0.8);
+}
+
+#star-input::placeholder {
+    color: rgba(200, 185, 255, 0.2);
+    letter-spacing: 0.3em;
+    font-style: italic;
+}
+
+#star-input:focus {
+    border-bottom-color: rgba(200, 185, 255, 0.7);
+}
+
+#enter-hint {
+    font-size: 1.2rem;
+    color: rgba(200, 185, 255, 0.4);
+    transition: opacity 0.4s ease, color 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+
+    opacity: 0;
+}
+
+#enter-hint.visible {
+    opacity: 1;
+}
+
+#enter-hint:hover {
+    color: rgba(200, 185, 255, 0.9);
+}
+
+#view-screen {
+    gap: 0;
+    justify-content: center;
+}
+
+#view-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(0.55rem, 1.4vw, 0.9rem);
+    letter-spacing: 0.4em;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(200, 185, 255, 0.4);
+    text-shadow: 0 0 30px rgba(160, 130, 255, 0.15);
+    text-transform: uppercase;
+    position: fixed;
+    top: 3vh;
+    left: 0;
+    right: 0;
+    text-align: center;
+    white-space: nowrap;
+    animation: fadeUp 1s ease both;
+}
+
+#reset-btn {
+    position: fixed;
+    bottom: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+    pointer-events: auto;
+
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: rgba(200, 185, 255, 0.3);
+    transition: color 0.4s ease;
+}
+
+#reset-btn:hover {
+    color: rgba(200, 185, 255, 0.8);
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+        filter: blur(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
