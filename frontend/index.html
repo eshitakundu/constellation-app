@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Constellation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="entry-screen">
+
+        <header id="main-title">
+            <span class="title-word">YOUR</span>
+            <span class="title-word accent">CONSTELLATION</span>
+        </header>
+
+        <div id="input-row">
+            <input type="text" id="star-input" placeholder="who are you?" autocomplete="off" maxlength="60"
+                spellcheck="false">
+            <span id="enter-hint">↵</span>
+        </div>
+
+    </div>
+    <div id="view-screen" class="hidden">
+        <div id="view-title"></div>
+        <button id="reset-btn">· again ·</button>
+    </div>
+
+    <script src="sketch.js"></script>
+</body>
+
+</html>
