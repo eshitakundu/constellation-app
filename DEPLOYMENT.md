@@ -47,4 +47,8 @@ Official references:
 ## Local verification
 
 Run `python -m http.server 8080 --directory frontend`, then visit `http://localhost:8080`.
-Run `node --test tests/constellation.test.cjs` for deterministic generation, Unicode, input limits, and connected-tree checks.
+Run `node --test tests/*.test.cjs` for deterministic generation, Unicode, input limits, and connected-tree checks.
+
+## Social experience checks
+
+After deploying, create one sky, choose **Let another sky in**, and compare two names. **Copy result link** should reproduce both skies and the score. **Invite someone** should open a landing page prompting the recipient for their name. **Save image** creates a 1080 × 1350 portrait PNG suited to social posts. Scores are deterministic entertainment, not relationship predictions. Link preview metadata is generic because names stay in URL fragments; share the PNG for a personalized visual preview.

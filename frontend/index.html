@@ -5,25 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Turn a name or phrase into personal constellation art. Create in your browser, download a PNG, and share your stars. No account needed."
+      content="Your name is a constellation. Discover your sky, collide with another, and share a playful cosmic compatibility score. No account needed."
     />
     <meta name="theme-color" content="#080817" />
     <meta
       property="og:title"
-      content="Your Constellation — a little sky of your own"
+      content="Your Constellation — who belongs in your orbit?"
     />
     <meta
       property="og:description"
-      content="Turn your words into star art. Create, download, and share your constellation."
+      content="Two names. Two skies. One cosmic collision. Find your playful compatibility and share your stars."
     />
     <meta property="og:type" content="website" />
     <title>Your Constellation — Personal Star Art Generator</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="style.css" />
     <script src="constellation.js" defer></script>
+    <script src="compatibility.js" defer></script>
     <script src="sketch.js" defer></script>
   </head>
-  <body>
+  <body class="home">
+    <canvas id="ambient" aria-hidden="true"></canvas>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <a class="brand" href="/">✦ Your Constellation</a>
@@ -33,73 +35,46 @@
     </header>
     <main id="main">
       <section class="intro" aria-labelledby="title">
-        <p class="eyebrow">A little sky of your own</p>
-        <h1 id="title">Your words.<br /><em>Your constellation.</em></h1>
-        <p>Turn a name, a memory, or a small wish into a pattern of stars.</p>
+        <div class="orbit-mark" aria-hidden="true">✦</div>
+        <p class="eyebrow" id="intro-kicker">
+          Some connections are written in the dark.
+        </p>
+        <h1 id="title">
+          <span>YOUR</span><span class="outline">CONSTELLATION</span>
+        </h1>
+        <p class="intro-copy" id="intro-copy">
+          You are more than a name.<br />You are a whole sky waiting to happen.
+        </p>
         <form id="constellation-form">
-          <label for="star-input">Name or phrase</label>
+          <label class="sr-only" for="star-input">Your name</label>
           <div class="input-row">
             <input
               id="star-input"
               type="text"
               maxlength="60"
-              placeholder="Try your name…"
+              placeholder="who are you?"
               required
               autocomplete="off"
               aria-describedby="input-help"
-            /><button type="submit">Create constellation ↗</button>
+            /><button type="submit" aria-label="Reveal my constellation">
+              ↗
+            </button>
           </div>
-          <p class="small" id="input-help">
-            Up to 60 characters. Created in your browser, with no account
-            needed.
-          </p>
+          <p class="small" id="input-help">Enter your name. Meet your stars.</p>
+          <p id="entry-status" class="small" role="status"></p>
         </form>
-        <div class="examples" aria-label="Try an example">
-          <span>Or try</span
-          ><button type="button" data-example="stardust">stardust</button
-          ><button type="button" data-example="a new beginning">
-            a new beginning</button
-          ><button type="button" data-example="moonlight">moonlight</button>
+        <div class="hero-bottom">
+          <span>01 / FIND YOUR SKY</span><span>02 / FIND WHO ORBITS IT</span>
         </div>
+        <a class="scroll-note" href="#how-it-works"
+          >THE SCIENCE? NONE. THE FEELING? EVERYTHING. ↓</a
+        >
         <noscript
           ><p>
-            Enable JavaScript to create star art. You can still read about the
-            generator below.
+            Enable JavaScript to create your constellation. You can still read
+            about the generator below.
           </p></noscript
         >
-      </section>
-      <section class="studio" aria-label="Constellation preview">
-        <div class="canvas-wrap">
-          <canvas
-            id="sky"
-            role="img"
-            aria-label="A decorative night sky. Create a constellation to see your words as stars."
-          ></canvas>
-          <div class="sky-caption">
-            <span id="sky-name">Every word starts a new sky</span
-            ><span id="sky-detail">An artistic star map, made by you</span>
-          </div>
-        </div>
-        <div class="toolbar">
-          <label class="motion"
-            ><input type="checkbox" id="animate" /> Animate stars</label
-          >
-          <div class="actions">
-            <button id="download" type="button" disabled>Download PNG</button
-            ><button id="share" type="button" disabled>Copy share link</button>
-          </div>
-        </div>
-        <p id="status" class="small status" role="status" aria-live="polite">
-          Your constellation will appear here.
-        </p>
-        <div id="share-fallback" hidden>
-          <label for="share-url">Copy this link manually</label
-          ><input id="share-url" type="text" readonly />
-        </div>
-        <p class="small">
-          Share links include your text. Only share names or phrases you are
-          comfortable making public.
-        </p>
       </section>
       <section class="content-section" id="how-it-works">
         <p class="eyebrow">From letters to light</p>
@@ -170,6 +145,28 @@
           </article>
         </div>
       </section>
+      <section class="content-section">
+        <p class="eyebrow">Two skies. One collision.</p>
+        <h2>Who belongs in your orbit?</h2>
+        <p>
+          Create your sky, then let another name in. Your two constellations
+          appear in electric violet and ice blue, joined by a single golden
+          thread. A repeatable, name-based calculation gives your pair a playful
+          compatibility score and a short original quote.
+        </p>
+        <p>
+          Or choose <strong>Invite someone</strong>: send your sky to a friend,
+          a crush, or your favorite person. They enter their own name to
+          discover your shared result. No signup. No saved profiles. Just a
+          small reason to start a conversation.
+        </p>
+        <p>
+          These scores are cosmic fiction for entertainment, not a measurement
+          of real compatibility. The same two names give the same score in
+          either order. Only share names you are comfortable including in a
+          public link.
+        </p>
+      </section>
       <section class="content-section faq">
         <p class="eyebrow">A few things to know</p>
         <h2>Questions about your constellation</h2>
@@ -204,8 +201,8 @@
         <details>
           <summary>Can I download and share the result?</summary>
           <p>
-            Download PNG saves a 1600 × 1000 image with your complete
-            constellation and its title. Copy share link creates a URL that
+            Save image downloads a portrait image with your complete
+            constellation and its title. Copy result link creates a URL that
             recreates your text and pattern. The link contains your text, so
             avoid sharing private information.
           </p>
@@ -222,6 +219,83 @@
         </details>
       </section>
     </main>
+    <dialog id="universe" aria-labelledby="sky-name">
+      <canvas
+        id="sky"
+        role="img"
+        aria-label="Your personal constellation"
+      ></canvas>
+      <div class="universe-ui">
+        <div class="universe-top">
+          <button id="back" type="button">← Back to earth</button
+          ><label class="motion"
+            ><input type="checkbox" id="animate" /> Motion</label
+          >
+        </div>
+        <header class="sky-heading">
+          <p class="eyebrow" id="sky-kicker">ONE NAME. AN ENTIRE UNIVERSE.</p>
+          <h2 id="sky-name"></h2>
+          <p id="sky-detail" class="small"></p>
+        </header>
+        <div class="universe-bottom">
+          <section
+            id="match-result"
+            hidden
+            aria-label="Cosmic compatibility result"
+          >
+            <p class="eyebrow">COSMIC COMPATIBILITY</p>
+            <div class="score-line">
+              <span id="match-score"></span
+              ><span class="match-type" id="match-type"></span>
+            </div>
+            <p class="match-quote" id="match-quote"></p>
+            <p class="small playful">
+              A little cosmic fiction. Not a relationship prediction.
+            </p>
+          </section>
+          <p id="solo-quote" class="solo-quote">
+            Somewhere, someone’s sky is waiting to collide with yours.
+          </p>
+          <form id="pair-form" hidden>
+            <label for="partner-input">Who’s on your mind?</label>
+            <div class="input-row">
+              <input
+                id="partner-input"
+                maxlength="60"
+                required
+                autocomplete="off"
+                placeholder="their name"
+              /><button type="submit" aria-label="Reveal compatibility">
+                ↗
+              </button>
+            </div>
+            <button class="text-button" id="cancel-pair" type="button">
+              Cancel
+            </button>
+          </form>
+          <div class="result-actions">
+            <button class="primary" id="add-person" type="button">
+              Let another sky in ↗</button
+            ><button id="invite" type="button">Invite someone</button
+            ><button id="download" type="button">Save image ↓</button
+            ><button id="share" type="button">Copy result link ↗</button>
+          </div>
+          <p
+            id="status"
+            class="small status"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <div id="share-fallback" hidden>
+            <label for="share-url">Copy this link</label
+            ><input id="share-url" type="text" readonly />
+          </div>
+          <p class="share-note">
+            Shared links and images contain the names you enter.
+          </p>
+        </div>
+      </div>
+    </dialog>
     <footer>
       <a class="brand" href="/">✦ Your Constellation</a>
       <p>A creative experiment in words and stars.</p>

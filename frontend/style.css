@@ -360,3 +360,458 @@ footer nav {
     scroll-behavior: auto;
   }
 }
+/* Immersive constellation experience */
+.home {
+  background: #020207;
+}
+.home #ambient {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  z-index: -1;
+  pointer-events: none;
+}
+.home .site-header,
+.home main,
+.home footer {
+  position: relative;
+}
+.home .site-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 28px 0;
+}
+.home .brand {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.17em;
+}
+.home .site-header nav {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.intro {
+  min-height: 100svh;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 110px 0 40px;
+  position: relative;
+}
+.orbit-mark {
+  font-size: 36px;
+  color: #e8d8ff;
+  text-shadow: 0 0 35px #b263ff;
+  margin-bottom: 20px;
+}
+.intro .eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.24em;
+}
+.intro h1 {
+  margin: 25px 0 22px;
+  line-height: 1.03;
+  text-align: center;
+  width: 100%;
+  font-weight: 400;
+}
+.intro h1 span {
+  display: block;
+  font-size: clamp(0.85rem, 2vw, 1.3rem);
+  letter-spacing: 0.75em;
+  margin-bottom: 14px;
+  padding-left: 0.75em;
+  color: #b5a0ce;
+}
+.intro h1 .outline {
+  font-size: clamp(2.15rem, 7.2vw, 6rem);
+  letter-spacing: 0.055em;
+  padding: 0;
+  color: transparent;
+  -webkit-text-stroke: 1px #dfc5ff;
+  text-shadow: 0 0 45px #a545ff44;
+}
+.intro .intro-copy {
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  max-width: 460px;
+  color: #b9abc9;
+  line-height: 1.8;
+  text-wrap: balance;
+}
+.intro form {
+  width: min(420px, 90%);
+  margin: 22px auto 0;
+}
+.intro .input-row,
+#pair-form .input-row {
+  flex-direction: row;
+  border-bottom: 1px solid #bfa3e780;
+  gap: 8px;
+}
+.intro input[type="text"],
+#pair-form input {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: center;
+  padding: 14px 0;
+  font-family: Georgia, serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.12em;
+}
+.intro input::placeholder {
+  color: #8c789f;
+}
+.intro .input-row button,
+#pair-form .input-row button {
+  background: transparent;
+  color: #eddaff;
+  border: 0;
+  font-size: 1.7rem;
+  padding: 4px 13px;
+}
+.intro form .small {
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: #9b8cab;
+}
+.hero-bottom {
+  display: flex;
+  gap: 32px;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  color: #9988ad;
+  margin-top: 35px;
+}
+.scroll-note {
+  font-size: 0.53rem;
+  letter-spacing: 0.13em;
+  text-decoration: none;
+  color: #b4a2c7;
+  margin-top: 32px;
+}
+.home .content-section {
+  background: #07060bd9;
+  padding: 55px 25px;
+}
+.home footer {
+  background: #07060bea;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.result-open {
+  overflow: hidden;
+}
+#universe {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #020207;
+  color: #f5edff;
+  overflow: auto;
+}
+#universe::backdrop {
+  background: #020207;
+}
+#sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.universe-ui {
+  position: relative;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  padding: 24px 36px 15px;
+}
+.universe-ui button,
+.universe-ui input,
+.universe-ui label,
+.universe-ui a {
+  pointer-events: auto;
+}
+.universe-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.universe-top button {
+  background: transparent;
+  border: 0;
+  padding: 8px 0;
+  color: #c6b7d7;
+  font-size: 0.73rem;
+  letter-spacing: 0.08em;
+}
+.motion {
+  font-size: 0.7rem;
+}
+.sky-heading {
+  text-align: center;
+  margin: 10px auto 0;
+  width: min(800px, 90%);
+}
+.sky-heading h2 {
+  margin: 10px 0;
+  font-size: clamp(1.5rem, 3.4vw, 3rem);
+  color: #f3e5ff;
+  overflow-wrap: anywhere;
+  text-shadow: 0 0 30px #ac57ff88;
+  line-height: 1.2;
+}
+.sky-heading .eyebrow {
+  font-size: 0.58rem;
+  letter-spacing: 0.23em;
+}
+.sky-heading .small {
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  color: #b4a0c8;
+}
+.universe-bottom {
+  margin-top: auto;
+  padding-top: 130px;
+  text-align: center;
+  width: min(800px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+}
+.solo-quote,
+.match-quote {
+  font-family: Georgia, serif;
+  font-style: italic;
+  color: #eadcf6;
+  text-wrap: balance;
+}
+.solo-quote {
+  font-size: 1.1rem;
+  margin: 14px auto 25px;
+  max-width: 420px;
+}
+.score-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+.score-line #match-score {
+  font-family: Georgia, serif;
+  font-size: 4.5rem;
+  line-height: 1;
+  letter-spacing: -0.07em;
+  text-shadow: 0 0 40px #cf9aff44;
+}
+.match-type {
+  max-width: 150px;
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.17em;
+  color: #d5b4ff;
+  line-height: 1.7;
+}
+.match-quote {
+  font-size: 1.1rem;
+  margin: 14px 0 8px;
+}
+.playful {
+  font-size: 0.62rem;
+  color: #a194b0;
+  margin: 0 0 20px;
+}
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  justify-content: center;
+}
+.result-actions button {
+  font-size: 0.7rem;
+  font-weight: 400;
+  border: 1px solid #655177;
+  padding: 12px 17px;
+  border-radius: 0;
+  background: #0c0714d9;
+  letter-spacing: 0.025em;
+}
+.result-actions .primary {
+  background: #e5ceff;
+  color: #160a23;
+  border-color: #e5ceff;
+}
+.result-actions button:hover {
+  border-color: #f4e8ff;
+  background: #352044;
+  color: white;
+}
+.status {
+  font-size: 0.7rem;
+  margin: 10px 0 0;
+  min-height: 1.3em;
+}
+.share-note {
+  font-size: 0.56rem;
+  color: #95869f;
+  margin: 6px 0 0;
+}
+#pair-form {
+  pointer-events: auto;
+  background: #0d0719f5;
+  border: 1px solid #664580;
+  padding: 22px;
+  margin: 0 auto 18px;
+  width: min(400px, 100%);
+  box-shadow: 0 0 80px #000;
+}
+#pair-form label {
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+}
+#pair-form .text-button {
+  border: 0;
+  background: transparent;
+  font-size: 0.7rem;
+  margin-top: 12px;
+  padding: 5px;
+}
+#share-fallback {
+  pointer-events: auto;
+  background: #10091a;
+  padding: 12px;
+  margin-top: 10px;
+}
+#share-fallback input {
+  font-size: 0.7rem;
+}
+#match-result .eyebrow {
+  font-size: 0.57rem;
+  margin: 0 0 10px;
+}
+@media (max-width: 650px) {
+  .home .site-header {
+    padding: 22px 0;
+  }
+  .home .brand {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+  .home .site-header nav {
+    font-size: 0.58rem;
+    gap: 14px;
+  }
+  .intro {
+    padding-top: 95px;
+  }
+  .intro h1 .outline {
+    font-size: clamp(1.72rem, 7.6vw, 3.1rem);
+    letter-spacing: 0.025em;
+  }
+  .intro .eyebrow {
+    font-size: 0.5rem;
+    letter-spacing: 0.13em;
+  }
+  .intro .intro-copy {
+    font-size: 0.95rem;
+    width: 90%;
+  }
+  .hero-bottom {
+    gap: 16px;
+    font-size: 0.45rem;
+  }
+  .scroll-note {
+    font-size: 0.45rem;
+  }
+  .universe-ui {
+    padding: 14px 16px 12px;
+  }
+  .sky-heading {
+    margin-top: 10px;
+  }
+  .sky-heading h2 {
+    font-size: 1.65rem;
+  }
+  .universe-bottom {
+    padding-top: 100px;
+  }
+  .score-line #match-score {
+    font-size: 3.5rem;
+  }
+  .match-type {
+    font-size: 0.65rem;
+    max-width: 115px;
+  }
+  .match-quote {
+    font-size: 0.98rem;
+    line-height: 1.45;
+  }
+  .result-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .result-actions button {
+    padding: 11px 7px;
+    font-size: 0.64rem;
+  }
+  .playful {
+    font-size: 0.56rem;
+    margin-bottom: 14px;
+  }
+  .solo-quote {
+    font-size: 1rem;
+  }
+  .share-note {
+    font-size: 0.5rem;
+  }
+  .home .content-section {
+    padding: 35px 16px;
+  }
+  .universe-top button {
+    font-size: 0.65rem;
+  }
+}
+@media (max-height: 650px) {
+  .universe-ui {
+    min-height: 650px;
+  }
+  #sky {
+    height: 650px;
+  }
+  .intro {
+    min-height: 650px;
+  }
+}
+.home #ambient {
+  z-index: 0;
+}
+.home main,
+.home footer {
+  z-index: 1;
+}
+.sky-heading h2.long-name {
+  font-size: clamp(0.95rem, 2vw, 1.5rem);
+}
