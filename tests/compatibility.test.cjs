@@ -1,6 +1,20 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { getCompatibility: match } = require("../frontend/compatibility.js");
+const { getQuote } = require("../frontend/compatibility.js");
+test("each attainable percentage has exactly one distinct quote", () => {
+  const quotes = Array.from({ length: 62 }, (_, i) => getQuote(i + 38));
+  assert.ok(
+    quotes.every((quote) => typeof quote === "string" && quote.length > 10),
+  );
+  assert.equal(new Set(quotes).size, 62);
+  assert.equal(getQuote(37), null);
+  assert.equal(getQuote(100), null);
+  for (let i = 0; i < 500; i++) {
+    const result = match(`person ${i}`, "someone");
+    assert.equal(result.quote, getQuote(result.score));
+  }
+});
 test("pair score is repeatable, case-insensitive, and independent of order", () => {
   assert.deepEqual(match("  Luna ", "NOVA"), match("nova", "luna"));
   assert.deepEqual(match("luna", "nova"), match("luna", "nova"));

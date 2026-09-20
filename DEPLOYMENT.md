@@ -9,17 +9,17 @@
    - Build command: `exit 0`
    - Build output directory: `frontend`
 3. Deploy. Open the supplied HTTPS `pages.dev` address and try a name, a single letter, a PNG download, and a shared link.
-4. Check About, Privacy, Terms, and a nonexistent URL (which should show the custom 404 page).
+4. Check About, Contact, Privacy, Terms, and a nonexistent URL (which should show the custom 404 page).
 5. Optionally add your domain from the project's Custom domains settings. Future pushes to `main` trigger deployments when Git integration is configured.
 
 No Python server, Node build, API URL, environment variables, or secrets are needed. Only `frontend/` is published. The old Python backend is retained as a reference and is not deployed.
 
 Reference: https://developers.cloudflare.com/pages/framework-guides/deploy-anything/
 
-## After the final public URL is known
+## Public website: https://constellation.eshita.dev
 
 - Check the published mobile and desktop site, including PNG downloads and clipboard behavior over HTTPS.
-- Add canonical URLs and `og:url` to each HTML page using the final preferred domain. Add a sitemap containing the home, about, privacy, and terms URLs, and reference it in `robots.txt`. These are intentionally not filled with a guessed domain.
+- Canonical URLs, Open Graph URLs, and `sitemap.xml` are configured for `https://constellation.eshita.dev`. The sitemap includes the home, about, contact, privacy, and terms pages; `robots.txt` points to it. The 404 page is excluded from indexing. Submit the sitemap in Google Search Console if you want to monitor indexing; this is separate from AdSense approval.
 - Confirm the GitHub contact routes on About are suitable. A dedicated contact address or form is a useful later addition if you want private enquiries.
 - Keep the privacy notice accurate if you enable Cloudflare analytics, other tracking, or additional hosting services.
 
@@ -29,7 +29,7 @@ The site is prepared for review, **not guaranteed approval**. Useful content, a 
 
 1. Publish the working site first. Create or use your own AdSense account and add the final website URL under Sites.
 2. Complete Google's account tasks. For site ownership verification, use the exact verification method supplied by AdSense. If offered, its HTML meta tag can be placed in the home page's `<head>` without loading advertising JavaScript. Never commit account credentials.
-3. If AdSense provides an ads.txt record, create `frontend/ads.txt` containing the **exact record from your account**. Confirm it is reachable at `https://YOUR-DOMAIN/ads.txt`. Do not use an invented publisher ID.
+3. If AdSense provides an ads.txt record, create `frontend/ads.txt` containing the **exact record from your account**. Confirm it is reachable at `https://constellation.eshita.dev/ads.txt`. Do not use an invented publisher ID.
 4. Before enabling advertising, update Privacy with the actual Google advertising data and cookie practices, links to Google's policies and user controls, and your consent choices. Do not leave the current “no advertising scripts” wording in place after enabling ads.
 5. Configure a Google-certified consent management platform for EEA, UK, and Switzerland traffic, as required by Google. Google's Privacy & messaging tools are one route. Configure any other privacy messages required for your audience. A cosmetic cookie banner is not a replacement for consent integration.
 6. Add the exact AdSense script and unit code from your account only after privacy and consent integration are ready. Prefer a clearly labelled **Advertisement** unit between the explanatory content sections. Keep ads away from Create, Download, Share, the canvas, and navigation. Do not place ads over the interactive experience or on the error page.
@@ -51,4 +51,10 @@ Run `node --test tests/*.test.cjs` for deterministic generation, Unicode, input 
 
 ## Social experience checks
 
-After deploying, create one sky, choose **Let another sky in**, and compare two names. **Copy result link** should reproduce both skies and the score. **Invite someone** should open a landing page prompting the recipient for their name. **Save image** creates a 1080 × 1350 portrait PNG suited to social posts. Scores are deterministic entertainment, not relationship predictions. Link preview metadata is generic because names stay in URL fragments; share the PNG for a personalized visual preview.
+After deploying, create one sky, choose **Compare names**, and compare two names. **Copy result link** should reproduce both skies and the score. **Invite someone** should open a landing page prompting the recipient for their name. **Save image** creates a 1080 × 1350 portrait PNG suited to social posts. Scores are deterministic entertainment, not relationship predictions. Link preview metadata is generic because names stay in URL fragments; share the PNG for a personalized visual preview.
+
+## Current readiness status
+
+Completed in the repository: functional generator; original explanations and FAQ; clear navigation; About, Contact, Privacy, and Terms; mobile layout and keyboard controls; HTTPS-domain canonical metadata; crawlable sitemap and robots.txt. Fonts are served locally with their licenses.
+
+Still owner-dependent: add this live site to AdSense, complete account and ownership verification, supply the real publisher ID and ads.txt record, configure the required certified CMP, update the privacy notice for the actual ad integration, and request Google review. No ad scripts are active. These code changes cannot guarantee approval or replace those account steps.

@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Your name is a constellation. Discover your sky, collide with another, and share a playful cosmic compatibility score. No account needed."
+      content="Create an animated constellation from your name. Compare two names, get a fun compatibility score, and save or share your result."
     />
     <meta name="theme-color" content="#080817" />
     <meta
       property="og:title"
-      content="Your Constellation — who belongs in your orbit?"
+      content="Your Constellation — create and compare"
     />
     <meta
       property="og:description"
-      content="Two names. Two skies. One cosmic collision. Find your playful compatibility and share your stars."
+      content="Create your constellation, compare names, and share a compatibility score. Just for fun."
     />
     <meta property="og:type" content="website" />
     <title>Your Constellation — Personal Star Art Generator</title>
@@ -23,6 +23,9 @@
     <script src="constellation.js" defer></script>
     <script src="compatibility.js" defer></script>
     <script src="sketch.js" defer></script>
+    <link rel="canonical" href="https://constellation.eshita.dev/" />
+    <meta property="og:url" content="https://constellation.eshita.dev/" />
+    <meta name="twitter:card" content="summary" />
   </head>
   <body class="home">
     <canvas id="ambient" aria-hidden="true"></canvas>
@@ -36,14 +39,12 @@
     <main id="main">
       <section class="intro" aria-labelledby="title">
         <div class="orbit-mark" aria-hidden="true">✦</div>
-        <p class="eyebrow" id="intro-kicker">
-          Some connections are written in the dark.
-        </p>
+        <p class="eyebrow" id="intro-kicker"></p>
         <h1 id="title">
           <span>YOUR</span><span class="outline">CONSTELLATION</span>
         </h1>
         <p class="intro-copy" id="intro-copy">
-          You are more than a name.<br />You are a whole sky waiting to happen.
+          Enter a name. See its constellation.
         </p>
         <form id="constellation-form">
           <label class="sr-only" for="star-input">Your name</label>
@@ -60,15 +61,13 @@
               ↗
             </button>
           </div>
-          <p class="small" id="input-help">Enter your name. Meet your stars.</p>
+          <p class="small" id="input-help">Press enter to begin.</p>
           <p id="entry-status" class="small" role="status"></p>
         </form>
         <div class="hero-bottom">
-          <span>01 / FIND YOUR SKY</span><span>02 / FIND WHO ORBITS IT</span>
+          <span>01 / CREATE</span><span>02 / COMPARE</span>
         </div>
-        <a class="scroll-note" href="#how-it-works"
-          >THE SCIENCE? NONE. THE FEELING? EVERYTHING. ↓</a
-        >
+        <a class="scroll-note" href="#how-it-works">HOW IT WORKS ↓</a>
         <noscript
           ><p>
             Enable JavaScript to create your constellation. You can still read
@@ -77,7 +76,7 @@
         >
       </section>
       <section class="content-section" id="how-it-works">
-        <p class="eyebrow">From letters to light</p>
+        <p class="eyebrow">How it works</p>
         <h2>How your constellation takes shape</h2>
         <div class="cards">
           <article>
@@ -116,7 +115,7 @@
         </p>
       </section>
       <section class="content-section">
-        <p class="eyebrow">Make something personal</p>
+        <p class="eyebrow">Things to try</p>
         <h2>Three ways to explore your sky</h2>
         <div class="cards">
           <article>
@@ -146,25 +145,22 @@
         </div>
       </section>
       <section class="content-section">
-        <p class="eyebrow">Two skies. One collision.</p>
-        <h2>Who belongs in your orbit?</h2>
+        <p class="eyebrow">Compare names</p>
+        <h2>A score for two names</h2>
         <p>
-          Create your sky, then let another name in. Your two constellations
-          appear in electric violet and ice blue, joined by a single golden
-          thread. A repeatable, name-based calculation gives your pair a playful
-          compatibility score and a short original quote.
+          Enter two names to see both constellations and a compatibility score.
+          Each percentage from 38% to 99% has its own short quote. The score is
+          calculated from the names, not from personal information or a
+          relationship questionnaire.
         </p>
         <p>
-          Or choose <strong>Invite someone</strong>: send your sky to a friend,
-          a crush, or your favorite person. They enter their own name to
-          discover your shared result. No signup. No saved profiles. Just a
-          small reason to start a conversation.
+          The same pair gets the same result in either order. Changing the
+          spelling can change the score. It is a game, not a prediction.
         </p>
         <p>
-          These scores are cosmic fiction for entertainment, not a measurement
-          of real compatibility. The same two names give the same score in
-          either order. Only share names you are comfortable including in a
-          public link.
+          Choose <strong>Invite someone</strong> to send a link with your name.
+          They can add theirs and share the result back. Nothing is sent to you
+          automatically.
         </p>
       </section>
       <section class="content-section faq">
@@ -227,13 +223,13 @@
       ></canvas>
       <div class="universe-ui">
         <div class="universe-top">
-          <button id="back" type="button">← Back to earth</button
+          <button id="back" type="button">← Back</button
           ><label class="motion"
             ><input type="checkbox" id="animate" /> Motion</label
           >
         </div>
         <header class="sky-heading">
-          <p class="eyebrow" id="sky-kicker">ONE NAME. AN ENTIRE UNIVERSE.</p>
+          <p class="eyebrow" id="sky-kicker">YOUR CONSTELLATION</p>
           <h2 id="sky-name"></h2>
           <p id="sky-detail" class="small"></p>
         </header>
@@ -243,21 +239,21 @@
             hidden
             aria-label="Cosmic compatibility result"
           >
-            <p class="eyebrow">COSMIC COMPATIBILITY</p>
+            <p class="eyebrow">COMPATIBILITY</p>
             <div class="score-line">
               <span id="match-score"></span
               ><span class="match-type" id="match-type"></span>
             </div>
             <p class="match-quote" id="match-quote"></p>
             <p class="small playful">
-              A little cosmic fiction. Not a relationship prediction.
+              For fun. Names cannot predict a relationship.
             </p>
           </section>
           <p id="solo-quote" class="solo-quote">
-            Somewhere, someone’s sky is waiting to collide with yours.
+            Add another name to see your compatibility score.
           </p>
           <form id="pair-form" hidden>
-            <label for="partner-input">Who’s on your mind?</label>
+            <label for="partner-input">Their name</label>
             <div class="input-row">
               <input
                 id="partner-input"
@@ -275,7 +271,7 @@
           </form>
           <div class="result-actions">
             <button class="primary" id="add-person" type="button">
-              Let another sky in ↗</button
+              Compare names ↗</button
             ><button id="invite" type="button">Invite someone</button
             ><button id="download" type="button">Save image ↓</button
             ><button id="share" type="button">Copy result link ↗</button>
@@ -298,9 +294,9 @@
     </dialog>
     <footer>
       <a class="brand" href="/">✦ Your Constellation</a>
-      <p>A creative experiment in words and stars.</p>
+      <p>Create, compare, and share constellations.</p>
       <nav aria-label="Footer">
-        <a href="about.html">About & contact</a
+        <a href="about.html">About</a><a href="contact.html">Contact</a
         ><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
       </nav>
     </footer>

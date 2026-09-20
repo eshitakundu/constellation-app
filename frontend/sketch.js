@@ -13,11 +13,13 @@
     started = 0,
     frame = null;
   motion.checked = !reduced.matches;
-  const stars = Array.from({ length: 260 }, (_, i) => ({
-    x: ((i * 137.508) % 997) / 997,
-    y: ((i * 73.731) % 991) / 991,
-    r: 0.4 + (i % 5) * 0.23,
-    phase: i * 1.73,
+  const stars = Array.from({ length: 380 }, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    r: 0.4 + Math.random() * 1.35,
+    phase: Math.random() * Math.PI * 2,
+    period: 1800 + Math.random() * 2200,
+    drift: 0.0000004 + Math.random() * 0.000001,
   }));
   function sky(context, w, h, time) {
     context.fillStyle = "#020207";
@@ -28,11 +30,11 @@
       [0.5, 0.75, "rgba(198,32,93,.09)", 0.35],
     ]) {
       const g = context.createRadialGradient(
-        w * x,
-        h * y,
+        w * (x + Math.sin(time / 24000) * 0.025),
+        h * (y + Math.cos(time / 29000) * 0.025),
         0,
-        w * x,
-        h * y,
+        w * (x + Math.sin(time / 24000) * 0.025),
+        h * (y + Math.cos(time / 29000) * 0.025),
         Math.max(w, h) * r,
       );
       g.addColorStop(0, color);
@@ -41,17 +43,34 @@
       context.fillRect(0, 0, w, h);
     }
     for (const s of stars) {
-      context.fillStyle = `rgba(230,227,255,${0.18 + 0.3 * (1 + Math.sin(s.phase + time / 1900))})`;
+      const brightness =
+        0.08 +
+        0.84 * Math.pow((1 + Math.sin(s.phase + time / s.period)) / 2, 1.6);
+      context.fillStyle = `rgba(240,233,255,${brightness})`;
       context.beginPath();
-      context.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2);
+      context.arc(
+        ((((s.x - time * s.drift) % 1) + 1) % 1) * w,
+        s.y * h,
+        s.r,
+        0,
+        Math.PI * 2,
+      );
       context.fill();
     }
   }
   function drawMap(context, data, region, color, time, complete) {
     if (!data) return [];
+    const centerX =
+      (Math.min(...data.stars.map((s) => s.x)) +
+        Math.max(...data.stars.map((s) => s.x))) /
+      2;
+    const centerY =
+      (Math.min(...data.stars.map((s) => s.y)) +
+        Math.max(...data.stars.map((s) => s.y))) /
+      2;
     const points = data.stars.map((s) => [
-      region.x + s.x * region.w,
-      region.y + s.y * region.h,
+      region.x + region.w / 2 + (s.x - centerX) * region.w,
+      region.y + region.h / 2 + (s.y - centerY) * region.h,
     ]);
     const progress =
       complete || !motion.checked
@@ -72,20 +91,37 @@
       visible.add(u);
       visible.add(v);
     }
+    if (count < data.edges.length) {
+      const [u, v] = data.edges[count],
+        fraction = data.edges.length * progress - count;
+      context.globalAlpha = 0.65;
+      context.beginPath();
+      context.moveTo(...points[u]);
+      context.lineTo(
+        points[u][0] + (points[v][0] - points[u][0]) * fraction,
+        points[u][1] + (points[v][1] - points[u][1]) * fraction,
+      );
+      context.stroke();
+    }
     context.globalAlpha = 1;
     for (const i of visible) {
       const [x, y] = points[i],
         r = 1.5 + data.stars[i].size * 100;
-      context.shadowBlur = 23;
+      const pulse =
+        complete || !motion.checked
+          ? 1
+          : 0.78 + 0.22 * Math.sin(time / 1600 + i * 1.7);
+      context.shadowBlur = 18 + pulse * 14;
+      context.globalAlpha = 0.6 + pulse * 0.4;
       context.fillStyle = "#fff";
       context.beginPath();
       context.arc(x, y, r, 0, Math.PI * 2);
       context.fill();
       context.shadowBlur = 0;
       context.strokeStyle = color;
-      context.globalAlpha = 0.32;
+      context.globalAlpha = 0.12 + pulse * 0.09;
       context.beginPath();
-      context.arc(x, y, r * 3.5, 0, Math.PI * 2);
+      context.arc(x, y, r * (2.7 + pulse), 0, Math.PI * 2);
       context.stroke();
       context.globalAlpha = 1;
     }
@@ -144,7 +180,7 @@
     }
     if (exporting) exportType(context, w, h);
   }
-  function fitText(context, text, maxWidth, startSize, font = "Georgia") {
+  function fitText(context, text, maxWidth, startSize, font = "Cormorant") {
     let size = startSize;
     do {
       context.font = `${size--}px ${font}`;
@@ -161,7 +197,7 @@
     c.fillText(name, w / 2, 140);
     if (match) {
       c.fillStyle = "#fff";
-      c.font = "115px Georgia";
+      c.font = "115px Cormorant";
       c.fillText(`${match.score}%`, w / 2, h * 0.735);
       c.fillStyle = "#c29aff";
       c.font = "25px sans-serif";
@@ -172,21 +208,21 @@
       c.fillStyle = "#b5a8c9";
       c.font = "17px sans-serif";
       c.fillText(
-        "A little cosmic fiction. Not a relationship prediction.",
+        "For fun. Names cannot predict a relationship.",
         w / 2,
         h * 0.9,
       );
     } else {
       c.fillStyle = "#eee4ff";
-      c.font = "italic 32px Georgia";
-      c.fillText("An entire universe, disguised as a name.", w / 2, h * 0.77);
+      c.font = "32px Cormorant";
+      c.fillText("Your constellation.", w / 2, h * 0.77);
       c.fillStyle = "#c29aff";
       c.font = "22px sans-serif";
-      c.fillText("WHO BELONGS IN YOUR ORBIT?", w / 2, h * 0.85);
+      c.fillText("ADD A NAME. COMPARE YOUR STARS.", w / 2, h * 0.85);
     }
     c.fillStyle = "#8e849f";
     c.font = "16px sans-serif";
-    c.fillText("Create your sky. Find your collision.", w / 2, h - 45);
+    c.fillText("constellation.eshita.dev", w / 2, h - 45);
   }
   function render(time = performance.now()) {
     frame = null;
@@ -210,6 +246,7 @@
       frame = requestAnimationFrame(render);
   }
   function redraw() {
+    document.body.classList.toggle("motion-paused", !motion.checked);
     if (frame !== null) cancelAnimationFrame(frame);
     render();
   }
@@ -227,11 +264,11 @@
       $("sky-name").textContent.length > 42,
     );
     $("sky-kicker").textContent = second
-      ? "TWO SKIES. ONE COLLISION."
-      : "ONE NAME. AN ENTIRE UNIVERSE.";
+      ? "YOUR CONSTELLATIONS"
+      : "YOUR CONSTELLATION";
     $("sky-detail").textContent = second
       ? "VIOLET / YOU     ·     ICE BLUE / THEM"
-      : `${first.stars.length} STARS · ONE OF A KIND FEELING`;
+      : `${first.stars.length} STARS`;
     $("match-result").hidden = !match;
     $("solo-quote").hidden = Boolean(match);
     if (match) {
@@ -240,8 +277,8 @@
       $("match-quote").textContent = match.quote;
     }
     $("add-person").textContent = match
-      ? "Try another orbit ↗"
-      : "Let another sky in ↗";
+      ? "Compare another name ↗"
+      : "Compare names ↗";
     $("pair-form").hidden = true;
     $("share-fallback").hidden = true;
     $("status").textContent = "";
@@ -271,7 +308,7 @@
     event.preventDefault();
     const name = $("star-input").value.trim();
     if (!name) {
-      $("entry-status").textContent = "Give your sky a name first.";
+      $("entry-status").textContent = "Enter a name first.";
       return;
     }
     $("entry-status").textContent = "";
@@ -291,7 +328,7 @@
     event.preventDefault();
     const name = $("partner-input").value.trim();
     if (!name) {
-      $("status").textContent = "Enter their name to discover your shared sky.";
+      $("status").textContent = "Enter their name to compare.";
       return;
     }
     show(first.text, name);
@@ -316,8 +353,8 @@
     try {
       await navigator.clipboard.writeText(url.href);
       $("status").textContent = invite
-        ? "Invitation copied. They add their name to discover your collision."
-        : "Result link copied. Send your sky to someone.";
+        ? "Invitation copied. They can add their name."
+        : "Result link copied.";
     } catch {
       $("share-fallback").hidden = false;
       $("share-url").value = url.href;
@@ -329,7 +366,8 @@
   }
   $("share").addEventListener("click", () => copy());
   $("invite").addEventListener("click", () => copy(true));
-  $("download").addEventListener("click", () => {
+  $("download").addEventListener("click", async () => {
+    await document.fonts.ready;
     const output = document.createElement("canvas");
     output.width = 1080;
     output.height = 1350;
@@ -353,15 +391,13 @@
   function readLink() {
     const params = new URLSearchParams(location.hash.slice(1));
     invitation = (params.get("invite") || "").slice(0, 60).trim();
-    $("intro-kicker").textContent = invitation
-      ? "YOU HAVE BEEN INVITED INTO SOMEONE’S ORBIT."
-      : "Some connections are written in the dark.";
+    $("intro-kicker").textContent = invitation ? "COMPARE YOUR NAMES" : "";
     $("intro-copy").textContent = invitation
-      ? `${invitation} left a space in their sky. Enter your name to discover your collision.`
-      : "You are more than a name. You are a whole sky waiting to happen.";
+      ? `${invitation} invited you to compare names.`
+      : "Enter a name. See its constellation.";
     $("input-help").textContent = invitation
-      ? "Your name + their sky. What happens next?"
-      : "Enter your name. Meet your stars.";
+      ? "Enter your name to see your result."
+      : "Press enter to begin.";
     const text = params.get("text");
     if (text && text.trim()) show(text, params.get("with") || "");
     else if (dialog.open) close();

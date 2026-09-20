@@ -1,6 +1,42 @@
-# Your Constellation
+<div align="center">
 
-A browser-only star art generator. Turn a name or phrase into a deterministic constellation, download a 1080 × 1350 portrait PNG, or share a link that recreates it.
+# ✦ Your Constellation
+
+**A name becomes a star map. Add another and compare.**
+
+### [Open constellation.eshita.dev ↗](https://constellation.eshita.dev)
+
+[How it works](#how-it-works) · [Run locally](#run-locally) · [Deploy](#deploy) · [Report a bug](https://github.com/eshitakundu/constellation-app/issues)
+
+<img src="docs/preview.png" width="360" alt="Example exported result for Luna and Nova: two connected constellations and a 65 percent game score">
+
+_An example of the downloadable result card._
+
+</div>
+
+## The experience
+
+| Create                                                      | Compare                                                            | Share                                                                         |
+| ----------------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| Enter a name to reveal its constellation across the screen. | Add a second name for two colored star maps, a score, and a quote. | Save a portrait PNG, copy a result link, or invite someone to add their name. |
+
+- **Animated sky:** randomly scattered background stars, independent slow twinkles, gentle drift, glowing nodes, and lines that draw themselves.
+- **Consistent results:** the same name makes the same pattern. Reversing a pair keeps its score.
+- **62 distinct quotes:** every possible percentage, from 38% to 99%, has its own line.
+- **Full-screen results:** centered layouts on desktop and mobile, with keyboard navigation and reduced-motion support.
+- **Local processing:** names stay in the browser. No accounts, database, analytics, or generation API.
+- **Self-hosted fonts:** Cinzel Decorative and Cormorant Garamond, with their OFL licenses included.
+
+Compatibility is a name-based game, not a relationship assessment. Share links and exported images include the names entered.
+
+## How it works
+
+1. Each character's code point and position determine a star's coordinates and size.
+2. A minimum spanning tree joins the stars without loops. The renderer centers the pattern and animates the connections.
+3. For a pair, a hash of the sorted, normalized names selects a score. That percentage selects its quote.
+4. Names in shared links are stored after `#` in the URL. The browser reads them locally; they are not part of the normal HTTP page request.
+
+The decorative background is randomized on each visit. The named constellations and pair scores are repeatable.
 
 ## Run locally
 
@@ -8,36 +44,56 @@ A browser-only star art generator. Turn a name or phrase into a deterministic co
 python -m http.server 8080 --directory frontend
 ```
 
-Open http://localhost:8080. There is no frontend build or backend dependency.
+Open [localhost:8080](http://localhost:8080). There is no install or build step.
 
-## Features
+Run the behavior checks with Node:
 
-- Deterministic character-to-star mapping and minimum spanning tree connections.
-- Native Canvas rendering with no external scripts, fonts, or runtime packages.
-- Single-character and Unicode support, bounded input, and whitespace validation.
-- Full-screen constellation reveals, portrait PNG exports, and share links using URL fragments.
-- Two-person cosmic compatibility with repeatable scores and original quotes, explicitly framed as entertainment.
-- Invitation links let a second person add their name to discover a shared sky.
-- Responsive, scrollable layout; labelled controls, keyboard access, live status, reduced-motion support, and an animation toggle.
-- Explanations, examples, FAQ, About/contact, Privacy, Terms, robots.txt, custom 404, and Cloudflare security headers.
-- Animation pauses when the tab is hidden; a motion toggle and reduced-motion preferences are respected.
+```sh
+node --test tests/*.test.cjs
+```
 
-## Deployment and advertising
+Checks cover input limits, Unicode, connected trees, repeatable pair scores, and a distinct quote for every supported percentage.
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for Cloudflare Pages settings and the remaining owner steps for AdSense. Publish `frontend` with build command `exit 0` and framework preset None.
+## Deploy
 
-No advertising or analytics code is enabled. AdSense requires a live site, your account-specific details, appropriate consent integration, and Google's review. Approval is not guaranteed.
+**Website:** [constellation.eshita.dev](https://constellation.eshita.dev)
 
-## Code
+Cloudflare Pages can publish the repository directly:
 
-- `frontend/index.html`: generator and explanatory content.
-- `frontend/constellation.js`: pure generation algorithm.
-- `frontend/sketch.js`: full-screen Canvas reveals, downloads, and sharing.
-- `frontend/compatibility.js`: symmetric name-based entertainment scores and quotes.
-- `frontend/style.css`: responsive styling.
-- `tests/constellation.test.cjs`: generator behavior checks.
-- `backend/`: original FastAPI implementation retained for reference; not needed or published by the static deployment.
+| Setting           | Value           |
+| ----------------- | --------------- |
+| Production branch | `main`          |
+| Framework         | None            |
+| Root directory    | Repository root |
+| Build command     | `exit 0`        |
+| Output directory  | `frontend`      |
 
-Run checks with `node --test tests/*.test.cjs`.
+See [DEPLOYMENT.md](DEPLOYMENT.md) for domain setup, checks, and AdSense steps.
 
-Patterns are decorative art, not astronomical charts, astrological readings, or unique identifiers.
+## AdSense preparation
+
+The site includes explanatory content, FAQ, About, Contact, Privacy, Terms, canonical URLs, a sitemap, robots.txt, and a custom 404 page. These support a usable, crawlable website; they do not guarantee AdSense approval.
+
+**Ads are not enabled.** Owner verification, the real publisher ID and ads.txt record, consent integration, and Google's site review still need to be completed. The deployment guide records the remaining steps.
+
+## Project map
+
+```text
+frontend/
+  index.html          Generator, full-screen results, and explanations
+  constellation.js    Character-to-star mapping and tree connections
+  compatibility.js    Pair scores and one quote per percentage
+  sketch.js           Animation, PNG export, and sharing
+  style.css           Responsive layout and typography
+  fonts/              Self-hosted fonts and their licenses
+  about.html          Project information
+  contact.html        Feedback and contact route
+  privacy.html        Current data practices
+  terms.html          Terms of use
+  sitemap.xml         Public page URLs
+tests/                Generator and compatibility checks
+docs/preview.png      Example export shown above
+backend/              Original FastAPI implementation; not deployed
+```
+
+Built with HTML, CSS, JavaScript, and the Canvas API. The static site has no runtime package dependencies.
