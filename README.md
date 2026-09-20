@@ -1,83 +1,40 @@
-# ✦ Constellation App ✦
+# Your Constellation
 
-An interactive, celestial web application that generates unique, deterministic star constellations from text input. Built with a FastAPI backend and a custom p5.js canvas frontend.
+A browser-only star art generator. Turn a name or phrase into a deterministic constellation, download a 1600 × 1000 PNG, or share a link that recreates it.
 
-## 🌌 Overview
+## Run locally
 
-The **Constellation App** maps any text input (like a name or phrase) into a beautiful, personalized star constellation. The backend dynamically determines star coordinates, brightness, and connection paths using a custom Minimum Spanning Tree (MST) algorithm, ensuring the same input always yields the exact same cosmic fingerprint. The frontend renders these star systems on an interactive canvas featuring twinkling background fields, floating nebulas, and glowing star hubs.
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **HTML5 & Vanilla CSS**: Custom layout, glowing titles, responsive styling, and custom inputs.
-- **p5.js**: Interactive 2D canvas rendering background drift stars, glowing interactive nodes, and smooth connection reveals.
-- **Google Fonts**: `Cinzel` (UI readability) and `Cinzel Decorative` (celestial title styling).
-
-### Backend
-- **Python 3.12+**
-- **FastAPI**: Lightweight web framework for serving the API.
-- **Uvicorn**: ASGI web server.
-- **Pydantic**: Data validation and representation.
-
----
-
-## 📁 Project Structure
-
-```text
-constellation-app/
-├── backend/
-│   ├── main.py                # FastAPI server & constellation generator
-│   └── requirements.txt       # Production python dependencies
-├── frontend/
-│   ├── index.html             # Main entrypoint
-│   ├── style.css              # Custom styling
-│   └── sketch.js              # p5.js rendering logic
-├── pyproject.toml             # uv/Python project metadata
-└── README.md                  # Project documentation
-```
-
----
-
-## 🚀 Running Locally
-
-### 1. Run the Backend API
-
-You can start the FastAPI backend using standard Python or `uv`.
-
-#### Using `uv` (Recommended):
-```powershell
-uv run python -m uvicorn backend.main:app --reload
-```
-*(Note: If `uv run uvicorn` fails with script path errors, run via python module command: `uv run python -m uvicorn backend.main:app --reload`)*
-
-#### Using standard Python & pip:
-1. Install dependencies:
-   ```powershell
-   pip install -r backend/requirements.txt
-   ```
-2. Start the server:
-   ```powershell
-   python -m uvicorn backend.main:app --reload
-   ```
-
-The backend server will run at `http://127.0.0.1:8000`.
-
-### 2. Run the Frontend
-
-Serve the static files under `/frontend` using any simple HTTP server.
-
-#### Using Python:
-```powershell
+```sh
 python -m http.server 8080 --directory frontend
 ```
 
-#### Using Node/npm:
-```powershell
-npx http-server frontend -p 8080
-```
+Open http://localhost:8080. There is no frontend build or backend dependency.
 
-Open your browser and navigate to **`http://localhost:8080`**.
+## Features
 
----
+- Deterministic character-to-star mapping and minimum spanning tree connections.
+- Native Canvas rendering with no external scripts, fonts, or runtime packages.
+- Single-character and Unicode support, bounded input, and whitespace validation.
+- PNG exports and share links using URL fragments; text is processed locally.
+- Responsive, scrollable layout; labelled controls, keyboard access, live status, reduced-motion support, and an animation toggle.
+- Explanations, examples, FAQ, About/contact, Privacy, Terms, robots.txt, custom 404, and Cloudflare security headers.
+- Animation pauses when the preview is off screen or the tab is hidden.
+
+## Deployment and advertising
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for Cloudflare Pages settings and the remaining owner steps for AdSense. Publish `frontend` with build command `exit 0` and framework preset None.
+
+No advertising or analytics code is enabled. AdSense requires a live site, your account-specific details, appropriate consent integration, and Google's review. Approval is not guaranteed.
+
+## Code
+
+- `frontend/index.html`: generator and explanatory content.
+- `frontend/constellation.js`: pure generation algorithm.
+- `frontend/sketch.js`: Canvas preview, download, and sharing.
+- `frontend/style.css`: responsive styling.
+- `tests/constellation.test.cjs`: generator behavior checks.
+- `backend/`: original FastAPI implementation retained for reference; not needed or published by the static deployment.
+
+Run checks with `node --test tests/constellation.test.cjs`.
+
+Patterns are decorative art, not astronomical charts, astrological readings, or unique identifiers.

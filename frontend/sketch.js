@@ -1,215 +1,197 @@
-let appData = { stars: [], edges: [] };
-let revealedEdges = 0;
-let isRevealing = false;
-let revealTimer = 0;
-const EDGE_DELAY = 10;
-
-let bgStars = [];
-
-let nebulaBuffer;
-
-let entryScreen, viewScreen, viewTitle, resetBtn, inp, enterHint;
-
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    for (let i = 0; i < 350; i++) {
-        bgStars.push({
-            x: random(width),
-            y: random(height),
-            size: random(0.5, 2.5),
-            drift: random(0.025, 0.14),
-            phase: random(TWO_PI),
-            twinkleSpeed: random(0.003, 0.012),
-        });
+(() => {
+  "use strict";
+  const canvas = document.getElementById("sky"),
+    ctx = canvas.getContext("2d");
+  const input = document.getElementById("star-input"),
+    status = document.getElementById("status");
+  const motion = document.getElementById("animate");
+  const download = document.getElementById("download"),
+    share = document.getElementById("share");
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  let data = generateConstellation(""),
+    started = 0,
+    frame = null,
+    onScreen = true;
+  motion.checked = !reducedMotion.matches;
+  const backgroundStars = Array.from({ length: 180 }, (_, i) => ({
+    x: ((i * 137.508) % 997) / 997,
+    y: ((i * 73.731) % 991) / 991,
+    r: 0.5 + (i % 4) * 0.3,
+    phase: i * 1.73,
+  }));
+  function paint(context, width, height, time, exporting = false) {
+    context.fillStyle = "#050510";
+    context.fillRect(0, 0, width, height);
+    const glow = context.createRadialGradient(
+      width * 0.4,
+      height * 0.4,
+      0,
+      width * 0.5,
+      height * 0.5,
+      width * 0.65,
+    );
+    glow.addColorStop(0, "#211434");
+    glow.addColorStop(0.5, "#0e132a");
+    glow.addColorStop(1, "#050510");
+    context.fillStyle = glow;
+    context.fillRect(0, 0, width, height);
+    for (const star of backgroundStars) {
+      const alpha = 0.28 + 0.22 * (1 + Math.sin(star.phase + time / 1600));
+      context.fillStyle = `rgba(224,220,255,${alpha})`;
+      context.beginPath();
+      context.arc(star.x * width, star.y * height, star.r, 0, Math.PI * 2);
+      context.fill();
     }
-    buildNebula();
-
-    entryScreen = document.getElementById('entry-screen');
-    viewScreen = document.getElementById('view-screen');
-    viewTitle = document.getElementById('view-title');
-    resetBtn = document.getElementById('reset-btn');
-    inp = document.getElementById('star-input');
-    enterHint = document.getElementById('enter-hint');
-
-    inp.addEventListener('input', () => {
-        if (inp.value.trim().length > 0) {
-            enterHint.classList.add('visible');
-        } else {
-            enterHint.classList.remove('visible');
-        }
+    const count =
+      exporting || !motion.checked
+        ? data.edges.length
+        : Math.min(data.edges.length, Math.floor((time - started) / 100));
+    const visible = new Set(data.stars.length ? [0] : []);
+    const point = (s) => [s.x * width, 22 + s.y * (height - 115)];
+    context.strokeStyle = "rgba(209,193,255,.5)";
+    context.lineWidth = exporting ? 1.7 : 1;
+    for (const [u, v] of data.edges.slice(0, Math.max(0, count))) {
+      visible.add(u);
+      visible.add(v);
+      context.beginPath();
+      context.moveTo(...point(data.stars[u]));
+      context.lineTo(...point(data.stars[v]));
+      context.stroke();
+    }
+    for (const id of visible) {
+      const star = data.stars[id],
+        [x, y] = point(star),
+        r = (1.8 + star.size * 130) * (exporting ? 1.4 : 1);
+      context.shadowColor = "#c8adff";
+      context.shadowBlur = r * 6;
+      context.fillStyle = "#f8f1ff";
+      context.beginPath();
+      context.arc(x, y, r, 0, Math.PI * 2);
+      context.fill();
+    }
+    context.shadowBlur = 0;
+    if (exporting) {
+      context.textAlign = "center";
+      context.fillStyle = "#eeeaf7";
+      let size = 36;
+      do {
+        context.font = `${size--}px Georgia`;
+      } while (context.measureText(data.text).width > width - 100 && size > 12);
+      context.fillText(data.text, width / 2, height - 62);
+      context.font = "16px sans-serif";
+      context.fillStyle = "#b7b1cc";
+      context.fillText(
+        "YOUR CONSTELLATION · Personal star art",
+        width / 2,
+        height - 28,
+      );
+    }
+  }
+  function render(time = performance.now()) {
+    frame = null;
+    const ratio = Math.min(devicePixelRatio || 1, 2),
+      { width, height } = canvas.getBoundingClientRect();
+    if (
+      canvas.width !== Math.round(width * ratio) ||
+      canvas.height !== Math.round(height * ratio)
+    ) {
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+    }
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    paint(ctx, width, height, motion.checked ? time : 0);
+    if (motion.checked && !document.hidden && onScreen)
+      frame = requestAnimationFrame(render);
+  }
+  function redraw() {
+    if (frame !== null) cancelAnimationFrame(frame);
+    render();
+  }
+  function create(value) {
+    const next = generateConstellation(value);
+    if (!next.stars.length) {
+      status.textContent = "Enter a name or phrase first.";
+      input.focus();
+      return;
+    }
+    data = next;
+    input.value = value.slice(0, 60);
+    started = performance.now();
+    document.getElementById("sky-name").textContent = data.text;
+    document.getElementById("sky-detail").textContent =
+      `${data.stars.length} stars · ${data.edges.length} connections`;
+    canvas.setAttribute(
+      "aria-label",
+      `Artistic constellation for ${data.text}: ${data.stars.length} stars and ${data.edges.length} connections.`,
+    );
+    status.textContent = "Your constellation is ready to download or share.";
+    download.disabled = share.disabled = false;
+    document.getElementById("share-fallback").hidden = true;
+    redraw();
+  }
+  document
+    .getElementById("constellation-form")
+    .addEventListener("submit", (event) => {
+      event.preventDefault();
+      create(input.value);
     });
-
-    const trigger = () => {
-        const txt = inp.value.trim();
-        if (txt) fetchAndReveal(txt);
-    };
-    inp.addEventListener('keypress', e => { if (e.key === 'Enter') trigger(); });
-    enterHint.addEventListener('click', trigger);
-
-    resetBtn.addEventListener('click', () => {
-        appData = { stars: [], edges: [] };
-        revealedEdges = 0;
-        isRevealing = false;
-
-        inp.value = '';
-        enterHint.classList.remove('visible');
-
-        viewScreen.classList.add('hidden');
-        setTimeout(() => {
-            entryScreen.classList.remove('hidden');
-            inp.focus();
-        }, 400);
-    });
-
-    inp.focus();
-}
-
-
-function draw() {
-    background(3, 2, 13);
-    tint(255, 55);
-    image(nebulaBuffer, 0, 0);
-    noTint();
-
-    noStroke();
-    for (let s of bgStars) {
-        s.x -= s.drift;
-        if (s.x < -2) s.x = width + 2;
-
-        const breath = sin(frameCount * s.twinkleSpeed + s.phase);
-        const alpha = map(breath, -1, 1, 20, 190);
-
-        fill(255, 255, 255, alpha);
-        circle(s.x, s.y, s.size);
-    }
-
-    if (isRevealing && revealedEdges < appData.edges.length) {
-        revealTimer++;
-        if (revealTimer >= EDGE_DELAY) {
-            revealedEdges++;
-            revealTimer = 0;
-            if (revealedEdges >= appData.edges.length) {
-                isRevealing = false;
-                revealComplete();
-            }
-        }
-    }
-
-    for (let i = 0; i < revealedEdges; i++) {
-        const edge = appData.edges[i];
-        const n1 = appData.stars[edge[0]];
-        const n2 = appData.stars[edge[1]];
-
-        const x1 = n1.x * width;
-        const y1 = n1.y * height;
-        const x2 = n2.x * width;
-        const y2 = n2.y * height;
-
-        stroke(190, 175, 255, 55);
-        strokeWeight(0.8);
-        line(x1, y1, x2, y2);
-    }
-
-    const revealed = new Set();
-    if (appData.stars.length > 0) revealed.add(0);
-    for (let i = 0; i < revealedEdges; i++) {
-        revealed.add(appData.edges[i][0]);
-        revealed.add(appData.edges[i][1]);
-    }
-
-    noStroke();
-    for (const idx of revealed) {
-        const star = appData.stars[idx];
-        const sx = star.x * width;
-        const sy = star.y * height;
-
-        const r = map(star.size, 0.005, 0.02, 1.5, 4);
-        drawingContext.shadowColor = 'rgba(210, 195, 255, 0.95)';
-        drawingContext.shadowBlur = r * 20 + sin(frameCount * 0.05) * 2;
-
-        fill(255, 255, 255);
-        circle(sx, sy, r * 1.4);
-
-        drawingContext.shadowBlur = 0;
-
-        if (dist(mouseX, mouseY, sx, sy) < 24) {
-            drawingContext.shadowColor = 'rgba(220, 210, 255, 0.8)';
-            drawingContext.shadowBlur = 12;
-            noStroke();
-            fill(235, 228, 255, 230);
-            textFont('Cinzel, serif');
-            textSize(18);
-            textAlign(CENTER, BOTTOM);
-            text(star.char, sx, sy - 16);
-            drawingContext.shadowBlur = 0;
-        }
-    }
-}
-
-async function fetchAndReveal(text) {
-    const normalised = text.toLowerCase();
-    entryScreen.classList.add('hidden');
-
-    const url = `http://127.0.0.1:8000/api/constellation?text=${encodeURIComponent(normalised)}`;
+  document
+    .querySelectorAll("[data-example]")
+    .forEach((button) =>
+      button.addEventListener("click", () => create(button.dataset.example)),
+    );
+  motion.addEventListener("change", redraw);
+  reducedMotion.addEventListener("change", (event) => {
+    motion.checked = !event.matches;
+    redraw();
+  });
+  document.addEventListener("visibilitychange", redraw);
+  new ResizeObserver(redraw).observe(canvas.parentElement);
+  new IntersectionObserver((entries) => {
+    onScreen = entries[0].isIntersecting;
+    redraw();
+  }).observe(canvas);
+  download.addEventListener("click", () => {
+    const output = document.createElement("canvas");
+    output.width = 1600;
+    output.height = 1000;
+    paint(output.getContext("2d"), output.width, output.height, 0, true);
+    output.toBlob((blob) => {
+      if (!blob) {
+        status.textContent = "Image export failed. Please try again.";
+        return;
+      }
+      const url = URL.createObjectURL(blob),
+        link = document.createElement("a");
+      link.href = url;
+      link.download = "your-constellation.png";
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      status.textContent = "Your PNG is ready. Check your browser downloads.";
+    }, "image/png");
+  });
+  share.addEventListener("click", async () => {
+    const url = new URL(location.href);
+    url.search = "";
+    url.hash = new URLSearchParams({ text: data.text }).toString();
     try {
-        const res = await fetch(url);
-        const data = await res.json();
-
-        appData.stars = data.stars;
-        appData.edges = data.edges;
-
-        revealedEdges = 0;
-        revealTimer = 0;
-        isRevealing = true;
-        viewTitle.textContent = normalised;
-
-        console.log(`✦ Mapped "${normalised}" → ${data.stars.length} stars, ${data.edges.length} edges`);
-    } catch (err) {
-        console.error('Backend fetch failed:', err);
-        entryScreen.classList.remove('hidden');
-        entryScreen.style.opacity = '';
+      await navigator.clipboard.writeText(url.href);
+      status.textContent = "Share link copied. The link includes your text.";
+    } catch {
+      document.getElementById("share-fallback").hidden = false;
+      const field = document.getElementById("share-url");
+      field.value = url.href;
+      field.focus();
+      field.select();
+      status.textContent =
+        "Copy the selected link to share your constellation.";
     }
-}
-
-function revealComplete() {
-    viewScreen.classList.remove('hidden');
-}
-
-function buildNebula() {
-    nebulaBuffer = createGraphics(width, height);
-    nebulaBuffer.noStroke();
-
-    const layers = [
-        { offsetX: 0, offsetY: 0, scale: 600, threshold: 0.50, r: 120, g: 20, b: 180, maxAlpha: 90 },
-        { offsetX: 300, offsetY: 150, scale: 500, threshold: 0.51, r: 180, g: 30, b: 80, maxAlpha: 75 },
-        { offsetX: 600, offsetY: 400, scale: 700, threshold: 0.50, r: 20, g: 130, b: 170, maxAlpha: 65 },
-        { offsetX: 100, offsetY: 700, scale: 450, threshold: 0.52, r: 60, g: 40, b: 200, maxAlpha: 80 },
-        { offsetX: 800, offsetY: 200, scale: 550, threshold: 0.53, r: 200, g: 90, b: 30, maxAlpha: 50 },
-    ];
-
-    const step = 6;
-
-    for (const layer of layers) {
-        for (let x = 0; x < width; x += step) {
-            for (let y = 0; y < height; y += step) {
-                const n = noise(
-                    (x + layer.offsetX) / layer.scale,
-                    (y + layer.offsetY) / layer.scale
-                );
-
-                if (n > layer.threshold) {
-                    const alpha = map(n, layer.threshold, 1.0, 0, layer.maxAlpha);
-                    nebulaBuffer.fill(layer.r, layer.g, layer.b, alpha);
-                    nebulaBuffer.rect(x, y, step + 1, step + 1);
-                }
-            }
-        }
-    }
-
-    nebulaBuffer.filter(BLUR, 18);
-}
-
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-    buildNebula();
-}
+  });
+  function readLink() {
+    const text = new URLSearchParams(location.hash.slice(1)).get("text");
+    if (text) create(text);
+  }
+  addEventListener("hashchange", readLink);
+  readLink();
+  redraw();
+})();

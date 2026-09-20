@@ -1,42 +1,234 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Constellation</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cinzel+Decorative:wght@400&display=swap"
-        rel="stylesheet">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-    <div id="entry-screen">
-
-        <header id="main-title">
-            <span class="title-word">YOUR</span>
-            <span class="title-word accent">CONSTELLATION</span>
-        </header>
-
-        <div id="input-row">
-            <input type="text" id="star-input" placeholder="who are you?" autocomplete="off" maxlength="60"
-                spellcheck="false">
-            <span id="enter-hint">↵</span>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Turn a name or phrase into personal constellation art. Create in your browser, download a PNG, and share your stars. No account needed."
+    />
+    <meta name="theme-color" content="#080817" />
+    <meta
+      property="og:title"
+      content="Your Constellation — a little sky of your own"
+    />
+    <meta
+      property="og:description"
+      content="Turn your words into star art. Create, download, and share your constellation."
+    />
+    <meta property="og:type" content="website" />
+    <title>Your Constellation — Personal Star Art Generator</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="constellation.js" defer></script>
+    <script src="sketch.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href="/">✦ Your Constellation</a>
+      <nav aria-label="Main navigation">
+        <a href="#how-it-works">How it works</a><a href="about.html">About</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="intro" aria-labelledby="title">
+        <p class="eyebrow">A little sky of your own</p>
+        <h1 id="title">Your words.<br /><em>Your constellation.</em></h1>
+        <p>Turn a name, a memory, or a small wish into a pattern of stars.</p>
+        <form id="constellation-form">
+          <label for="star-input">Name or phrase</label>
+          <div class="input-row">
+            <input
+              id="star-input"
+              type="text"
+              maxlength="60"
+              placeholder="Try your name…"
+              required
+              autocomplete="off"
+              aria-describedby="input-help"
+            /><button type="submit">Create constellation ↗</button>
+          </div>
+          <p class="small" id="input-help">
+            Up to 60 characters. Created in your browser, with no account
+            needed.
+          </p>
+        </form>
+        <div class="examples" aria-label="Try an example">
+          <span>Or try</span
+          ><button type="button" data-example="stardust">stardust</button
+          ><button type="button" data-example="a new beginning">
+            a new beginning</button
+          ><button type="button" data-example="moonlight">moonlight</button>
         </div>
-
-    </div>
-    <div id="view-screen" class="hidden">
-        <div id="view-title"></div>
-        <button id="reset-btn">· again ·</button>
-    </div>
-
-    <script src="sketch.js"></script>
-</body>
-
+        <noscript
+          ><p>
+            Enable JavaScript to create star art. You can still read about the
+            generator below.
+          </p></noscript
+        >
+      </section>
+      <section class="studio" aria-label="Constellation preview">
+        <div class="canvas-wrap">
+          <canvas
+            id="sky"
+            role="img"
+            aria-label="A decorative night sky. Create a constellation to see your words as stars."
+          ></canvas>
+          <div class="sky-caption">
+            <span id="sky-name">Every word starts a new sky</span
+            ><span id="sky-detail">An artistic star map, made by you</span>
+          </div>
+        </div>
+        <div class="toolbar">
+          <label class="motion"
+            ><input type="checkbox" id="animate" /> Animate stars</label
+          >
+          <div class="actions">
+            <button id="download" type="button" disabled>Download PNG</button
+            ><button id="share" type="button" disabled>Copy share link</button>
+          </div>
+        </div>
+        <p id="status" class="small status" role="status" aria-live="polite">
+          Your constellation will appear here.
+        </p>
+        <div id="share-fallback" hidden>
+          <label for="share-url">Copy this link manually</label
+          ><input id="share-url" type="text" readonly />
+        </div>
+        <p class="small">
+          Share links include your text. Only share names or phrases you are
+          comfortable making public.
+        </p>
+      </section>
+      <section class="content-section" id="how-it-works">
+        <p class="eyebrow">From letters to light</p>
+        <h2>How your constellation takes shape</h2>
+        <div class="cards">
+          <article>
+            <span class="step">01</span>
+            <h3>A star for each character</h3>
+            <p>
+              Each letter, space, or symbol becomes a star. Its character code
+              and position in your phrase determine where it appears. Changing
+              the order of your words changes the map.
+            </p>
+          </article>
+          <article>
+            <span class="step">02</span>
+            <h3>The shortest next connection</h3>
+            <p>
+              Starting with the first star, the generator repeatedly connects
+              the nearest unconnected star to the growing pattern. This minimum
+              spanning tree joins the stars without forming loops.
+            </p>
+          </article>
+          <article>
+            <span class="step">03</span>
+            <h3>A pattern you can return to</h3>
+            <p>
+              The calculation is repeatable: the same text produces the same
+              star positions and connections. Capital letters become lowercase
+              and spaces at the beginning and end are removed.
+            </p>
+          </article>
+        </div>
+        <p>
+          The background sky is decorative. Your generated stars use fixed
+          coordinates, so the pattern scales to fit your screen. Some characters
+          can land close together or overlap; the formula creates playful
+          patterns, not a unique identifier.
+        </p>
+      </section>
+      <section class="content-section">
+        <p class="eyebrow">Make something personal</p>
+        <h2>Three ways to explore your sky</h2>
+        <div class="cards">
+          <article>
+            <h3>Compare a name and a nickname</h3>
+            <p>
+              Try your full name, then a shorter version. Notice which early
+              stars stay in place and how the connections change when you add
+              characters.
+            </p>
+          </article>
+          <article>
+            <h3>Mark a small moment</h3>
+            <p>
+              Use a phrase such as “a new beginning” or “our first summer.”
+              Download the resulting art for a personal digital keepsake or a
+              message to a friend.
+            </p>
+          </article>
+          <article>
+            <h3>Experiment with word order</h3>
+            <p>
+              Compare “moon light” with “light moon.” The same letters occupy
+              different positions in the input, so they create a different
+              arrangement of stars.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="content-section faq">
+        <p class="eyebrow">A few things to know</p>
+        <h2>Questions about your constellation</h2>
+        <details open>
+          <summary>Is this a real constellation or birth chart?</summary>
+          <p>
+            No. This is generative art based on text. It does not use
+            astronomical observations, your birthday, or your location, and it
+            makes no predictions about personality or the future.
+          </p>
+        </details>
+        <details>
+          <summary>
+            Why does the same name always make the same pattern?
+          </summary>
+          <p>
+            The generator uses a fixed mathematical rule instead of random star
+            positions. Case does not matter, but punctuation, internal spaces,
+            and the order of characters do. The animated background is separate
+            from your pattern.
+          </p>
+        </details>
+        <details>
+          <summary>What happens with a single letter or emoji?</summary>
+          <p>
+            A single Unicode code point creates one star with no connecting
+            lines. Some emoji consist of several code points and can create
+            several stars. The input accepts up to 60 characters as counted by
+            your browser.
+          </p>
+        </details>
+        <details>
+          <summary>Can I download and share the result?</summary>
+          <p>
+            Download PNG saves a 1600 × 1000 image with your complete
+            constellation and its title. Copy share link creates a URL that
+            recreates your text and pattern. The link contains your text, so
+            avoid sharing private information.
+          </p>
+        </details>
+        <details>
+          <summary>Do you save the names I enter?</summary>
+          <p>
+            The generator processes text in your browser without sending it to a
+            generation server. There is no account or saved gallery. Shared text
+            is stored in the link’s fragment. Read our
+            <a href="privacy.html">privacy notice</a> for hosting and
+            external-link details.
+          </p>
+        </details>
+      </section>
+    </main>
+    <footer>
+      <a class="brand" href="/">✦ Your Constellation</a>
+      <p>A creative experiment in words and stars.</p>
+      <nav aria-label="Footer">
+        <a href="about.html">About & contact</a
+        ><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
+      </nav>
+    </footer>
+  </body>
 </html>
